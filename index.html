@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light only">
 <title>Guía de Usuario — Sistema Integral de Alto Rendimiento</title>
 <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,7 +15,9 @@
     --blue: #236092;
     --slate: #415364;
     --gold: #C89A4E;
+    --gold-text: #97701F;
     --gold-soft: #E7D3AC;
+    color-scheme: light;
     --green: #3C7A5E;
     --green-soft: #DCEBE3;
     --paper: #F7F5F1;
@@ -39,13 +42,7 @@
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
   }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) { --paper:#0E1B26; --card:#142531; --ink:#EDEFF1; --ink-soft:#A9B7C1; --line:#223442; --green-soft:#173327; }
-  }
-  :root[data-theme="dark"] { --paper:#0E1B26; --card:#142531; --ink:#EDEFF1; --ink-soft:#A9B7C1; --line:#223442; --green-soft:#173327; }
   h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; font-weight: 600; color: var(--navy); letter-spacing: -0.01em; }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) h1,h2,h3 { color:#DCE7F0; } }
-  :root[data-theme="dark"] h1,h2,h3 { color:#DCE7F0; }
   p { color: var(--ink-soft); max-width: 62ch; }
   a { color: var(--blue); }
 
@@ -67,12 +64,8 @@
     width: 258px; flex-shrink: 0; position: sticky; top: 0; height: 100vh;
     overflow-y: auto; background: var(--navy); padding: 32px 22px 30px; color: #C9D6E0;
   }
-  .logo-plate {
-    background: #fff; border-radius: 12px; padding: 12px 14px 8px;
-    display: inline-flex; align-items: center; justify-content: center;
-  }
-  .logo-plate img { width: 68px; height: auto; display: block; }
-  .brand-caption { font-family: 'Inter', sans-serif; color: #8FA6B8; font-size: 12px; font-weight: 500; margin: 14px 0 0; line-height: 1.5; }
+  .logo-mark img { width: 168px; height: auto; display: block; }
+  .brand-caption { font-family: 'Inter', sans-serif; color: #8FA6B8; font-size: 12px; font-weight: 500; margin: 18px 0 0; line-height: 1.5; }
   .navlist { list-style: none; padding: 0; margin: 26px 0 0; }
   .navlist li a { display: flex; align-items:center; gap:8px; color: #B7C6D2; text-decoration: none; font-size: 14.5px; font-weight: 500; padding: 9px 10px; border-radius: 7px; margin-bottom: 2px; border-left: 2px solid transparent; }
   .navlist li a:hover { background: rgba(255,255,255,0.06); color: #fff; }
@@ -86,7 +79,7 @@
 
   .hero { padding: 58px 0 0; opacity: 0; animation: rise 0.7s ease forwards; }
   @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-  .hero p.kicker { font-size: 13.5px; color: var(--gold); font-weight: 600; margin: 0 0 10px; }
+  .hero p.kicker { font-size: 13.5px; color: var(--gold-text); font-weight: 600; margin: 0 0 10px; }
   .hero h1 { font-size: clamp(28px, 4vw, 42px); margin: 0 0 14px; max-width: 20ch; }
   .hero p.lede { font-size: 17px; max-width: 58ch; margin-bottom: 30px; }
 
@@ -109,8 +102,6 @@
   .step p { margin: 0; font-size: 14.5px; }
 
   .callout { background: var(--gold-soft); border-left: 3px solid var(--gold); color: #4A3A17; padding: 14px 18px; border-radius: 0 8px 8px 0; font-size: 14px; margin: 18px 0 0; }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .callout { background:#2A2313; color:#E9D9AE; } }
-  :root[data-theme="dark"] .callout { background:#2A2313; color:#E9D9AE; }
 
   .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .feature { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 20px 18px; }
@@ -138,13 +129,11 @@
   table.routine td { padding: 12px 14px; border-bottom: 1px solid var(--line); color: var(--ink-soft); vertical-align: top; }
   table.routine tr:last-child td { border-bottom: none; }
   table.routine td.when { color: var(--navy); font-weight: 600; white-space: nowrap; }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) table.routine td.when { color:#9FC1DB; } }
-  :root[data-theme="dark"] table.routine td.when { color:#9FC1DB; }
 
   .faq-item { border-bottom: 1px solid var(--line); }
   .faq-item:first-child { border-top: 1px solid var(--line); }
   .faq-q { display: flex; justify-content: space-between; align-items: center; padding: 18px 4px; cursor: pointer; font-weight: 600; font-size: 15px; color: var(--ink); }
-  .faq-q .plus { font-size: 18px; color: var(--gold); transition: transform 0.2s ease; flex-shrink: 0; margin-left: 14px; }
+  .faq-q .plus { font-size: 18px; color: var(--gold-text); transition: transform 0.2s ease; flex-shrink: 0; margin-left: 14px; }
   .faq-item.open .faq-q .plus { transform: rotate(45deg); }
   .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.25s ease; }
   .faq-item.open .faq-a { max-height: 240px; }
@@ -177,6 +166,29 @@
     footer.foot { padding: 30px 22px 50px; }
     table.routine { font-size: 13px; }
   }
+
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+    body { background: #fff; font-size: 12.5px; }
+    .progress-track, .topbar, nav.sidebar, .sidebar-foot { display: none !important; }
+    .shell { display: block; max-width: 100%; }
+    main { padding: 0 24px; }
+    .hero { padding-top: 10px; animation: none; opacity: 1; }
+    .video-frame { display: none; }
+    section.block { break-inside: avoid-page; padding-top: 26px; }
+    section.block h2 { break-after: avoid; }
+    .step, .feature, .shot, .compare .col, .ipbox, .support-card, table.routine { break-inside: avoid; }
+    .shot img { max-width: 100%; }
+    /* El video no se puede imprimir: mostramos el link como texto */
+    .hero::after {
+      content: "Video tutorial: https://www.youtube.com/watch?v=MFWytp2xPr8";
+      display: block; font-size: 12px; color: var(--ink-soft); margin: -14px 0 30px;
+    }
+    /* Todas las respuestas del FAQ se muestran expandidas al imprimir */
+    .faq-a { max-height: none !important; overflow: visible !important; }
+    .faq-q .plus { display: none; }
+    .support-card a.btn { display: none; }
+  }
 </style>
 </head>
 <body>
@@ -191,7 +203,7 @@
 
 <div class="shell">
   <nav class="sidebar" id="sidebar">
-    <div class="logo-plate"><img src="assets/logo.svg" alt="Saturia Systems"></div>
+    <div class="logo-mark"><img src="assets/saturia-logo-horizontal-blanco.png" alt="Saturia Systems"></div>
     <p class="brand-caption">Guía de usuario<br>Sistema Integral de Alto Rendimiento</p>
     <ul class="navlist">
       <li><a href="#inicio" class="nav-link">Bienvenida</a></li>
