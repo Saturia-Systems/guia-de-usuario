@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light only">
+<title>Guía de Usuario — Ecosistema de Gestión de Mantenimiento</title>
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #002B49;
+    --blue: #236092;
+    --slate: #415364;
+    --gold: #C89A4E;
+    --gold-text: #97701F;
+    --gold-soft: #E7D3AC;
+    color-scheme: light;
+    --green: #3C7A5E;
+    --green-soft: #DCEBE3;
+    --paper: #F7F5F1;
+    --card: #FFFFFF;
+    --ink: #10202D;
+    --ink-soft: #4B5C68;
+    --line: #E1DED6;
+    --radius: 12px;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  *, *::before, *::after { box-sizing: inherit; }
+  html { scroll-padding-top: 84px; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; font-weight: 600; color: var(--navy); letter-spacing: -0.01em; }
+  p { color: var(--ink-soft); max-width: 62ch; }
+  a { color: var(--blue); }
+
+  .progress-track { position: fixed; top: 0; left: 0; right: 0; height: 3px; background: transparent; z-index: 60; }
+  .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold), var(--blue)); transition: width 0.1s linear; }
+
+  .topbar {
+    display: none; position: sticky; top: 0; z-index: 40;
+    background: var(--navy); color: #fff;
+    padding: calc(14px + env(safe-area-inset-top,0px)) 20px 14px;
+    align-items: center; justify-content: space-between;
+    font-family: 'Fraunces', serif; font-size: 17px;
+  }
+  .topbar button { background: rgba(255,255,255,0.12); border: none; color: #fff; width: 34px; height: 34px; border-radius: 8px; font-size: 18px; cursor: pointer; }
+
+  .shell { display: flex; min-height: 100%; max-width: 1220px; margin: 0 auto; }
+
+  nav.sidebar {
+    width: 258px; flex-shrink: 0; position: sticky; top: 0; height: 100vh;
+    overflow-y: auto; background: var(--navy); padding: 32px 22px 30px; color: #C9D6E0;
+  }
+  .logo-mark img { width: 168px; height: auto; display: block; }
+  .brand-caption { font-family: 'Inter', sans-serif; color: #8FA6B8; font-size: 12px; font-weight: 500; margin: 18px 0 0; line-height: 1.5; }
+  .navlist { list-style: none; padding: 0; margin: 26px 0 0; }
+  .navlist li a { display: flex; align-items:center; gap:8px; color: #B7C6D2; text-decoration: none; font-size: 14.5px; font-weight: 500; padding: 9px 10px; border-radius: 7px; margin-bottom: 2px; border-left: 2px solid transparent; }
+  .navlist li a:hover { background: rgba(255,255,255,0.06); color: #fff; }
+  .navlist li a.active { color: #fff; background: rgba(200,154,78,0.16); border-left-color: var(--gold); }
+  .sidebar-foot { margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.12); }
+  .sidebar-foot a.dl { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; text-decoration: none; background: var(--gold); color: #1B1300; padding: 9px 14px; border-radius: 8px; font-weight: 600; }
+  .sidebar-support { margin-top: 16px; font-size: 12.5px; color: #7E93A4; line-height: 1.5; }
+  .sidebar-support a { color: #C9D6E0; }
+
+  main { flex: 1; min-width: 0; padding: 0 56px 100px; }
+
+  .hero { padding: 58px 0 0; opacity: 0; animation: rise 0.7s ease forwards; }
+  @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .hero p.kicker { font-size: 13.5px; color: var(--gold-text); font-weight: 600; margin: 0 0 10px; }
+  .hero h1 { font-size: clamp(28px, 4vw, 42px); margin: 0 0 14px; max-width: 20ch; }
+  .hero p.lede { font-size: 17px; max-width: 58ch; margin-bottom: 30px; }
+
+  .video-frame {
+    position: relative; border-radius: 16px; overflow: hidden;
+    max-width: 720px; aspect-ratio: 16/9;
+    border: 1px solid var(--line);
+    box-shadow: 0 18px 40px -22px rgba(0,43,73,0.35);
+  }
+  .video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+  section.block { padding-top: 64px; margin-top: 0; border-top: 1px solid var(--line); }
+  section.block:first-of-type { border-top: none; }
+  section.block h2 { font-size: 25px; margin: 0 0 6px; }
+  section.block > p.desc { margin: 0 0 28px; font-size: 15px; }
+
+  .step { display: flex; gap: 18px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 22px; margin-bottom: 14px; }
+  .step .num { flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%; background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-size: 14px; font-weight: 600; }
+  .step h4 { margin: 0 0 4px; font-family: 'Inter', sans-serif; font-weight: 600; color: var(--ink); font-size: 15.5px; }
+  .step p { margin: 0; font-size: 14.5px; }
+
+  .callout { background: var(--gold-soft); border-left: 3px solid var(--gold); color: #4A3A17; padding: 14px 18px; border-radius: 0 8px 8px 0; font-size: 14px; margin: 18px 0 0; }
+
+  .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .feature { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 20px 18px; }
+  .feature .icon { font-size: 20px; }
+  .feature h4 { font-size: 15px; margin: 10px 0 6px; color: var(--ink); font-family:'Inter',sans-serif; font-weight:600; }
+  .feature p { font-size: 13.8px; margin: 0; }
+
+  .shot { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; box-shadow: 0 18px 40px -26px rgba(0,43,73,0.3); margin-bottom: 26px; }
+  .shot-bar { display: flex; gap: 6px; padding: 12px 16px; background: var(--paper); border-bottom: 1px solid var(--line); }
+  .shot-bar span { width: 9px; height: 9px; border-radius: 50%; background: var(--line); }
+  .shot img { display: block; width: 100%; height: auto; }
+  .shot-caption { padding: 14px 20px 16px; font-size: 13.5px; color: var(--ink-soft); }
+  .shot-caption strong { color: var(--ink); font-weight: 600; }
+
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .compare .col { border-radius: var(--radius); padding: 20px 22px; border: 1px solid var(--line); }
+  .compare .col.yes { background: rgba(35,96,146,0.06); }
+  .compare .col.no { background: rgba(65,83,100,0.06); }
+  .compare .col h4 { margin: 0 0 12px; font-family: 'Inter',sans-serif; font-weight: 700; font-size: 14px; color: var(--ink); }
+  .compare ul { margin: 0; padding-left: 18px; }
+  .compare li { font-size: 14px; color: var(--ink-soft); margin-bottom: 9px; }
+
+  table.routine { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 14px; }
+  table.routine th { text-align: left; font-family:'Inter',sans-serif; font-weight: 600; color: var(--ink); font-size: 12.5px; padding: 10px 14px; border-bottom: 2px solid var(--line); }
+  table.routine td { padding: 12px 14px; border-bottom: 1px solid var(--line); color: var(--ink-soft); vertical-align: top; }
+  table.routine tr:last-child td { border-bottom: none; }
+  table.routine td.when { color: var(--navy); font-weight: 600; white-space: nowrap; }
+
+  .faq-item { border-bottom: 1px solid var(--line); }
+  .faq-item:first-child { border-top: 1px solid var(--line); }
+  .faq-q { display: flex; justify-content: space-between; align-items: center; padding: 18px 4px; cursor: pointer; font-weight: 600; font-size: 15px; color: var(--ink); }
+  .faq-q .plus { font-size: 18px; color: var(--gold-text); transition: transform 0.2s ease; flex-shrink: 0; margin-left: 14px; }
+  .faq-item.open .faq-q .plus { transform: rotate(45deg); }
+  .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.25s ease; }
+  .faq-item.open .faq-a { max-height: 240px; }
+  .faq-a p { padding: 0 4px 18px; font-size: 14.5px; }
+
+  .ipbox { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 24px; }
+  .ipbox p { font-size: 14px; margin-bottom: 12px; }
+  .ipbox p:last-child { margin-bottom: 0; }
+  .ipbox strong { color: var(--ink); }
+
+  .support-card {
+    display: flex; align-items: center; justify-content: space-between; gap: 20px;
+    background: var(--navy); border-radius: 16px; padding: 30px 34px; margin-top: 10px; flex-wrap: wrap;
+  }
+  .support-card h3 { color: #fff; margin: 0 0 6px; font-size: 20px; }
+  .support-card p { color: #B7C6D2; margin: 0; max-width: 42ch; font-size: 14px; }
+  .support-card a.btn { flex-shrink:0; background: var(--gold); color: #1B1300; text-decoration: none; font-weight: 600; font-size: 14px; padding: 12px 22px; border-radius: 9px; }
+
+  footer.foot { max-width: 1220px; margin: 0 auto; padding: 40px 56px 60px; color: var(--ink-soft); font-size: 13px; }
+
+  @media (max-width: 880px) {
+    .topbar { display: flex; }
+    nav.sidebar { position: fixed; left: 0; top: 0; bottom: 0; z-index: 50; transform: translateX(-100%); transition: transform 0.25s ease; width: 78%; max-width: 300px; padding-top: calc(24px + env(safe-area-inset-top,0px)); }
+    nav.sidebar.open { transform: translateX(0); box-shadow: 8px 0 24px rgba(0,0,0,0.25); }
+    .shell { display: block; }
+    main { padding: 0 22px 80px; }
+    .hero { padding-top: 26px; }
+    .feature-grid, .compare { grid-template-columns: 1fr; }
+    .support-card { flex-direction: column; align-items: flex-start; }
+    footer.foot { padding: 30px 22px 50px; }
+    table.routine { font-size: 13px; }
+  }
+
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+    body { background: #fff; font-size: 12.5px; }
+    .progress-track, .topbar, nav.sidebar, .sidebar-foot { display: none !important; }
+    .shell { display: block; max-width: 100%; }
+    main { padding: 0 24px; }
+    .hero { padding-top: 10px; animation: none; opacity: 1; }
+    .video-frame { display: none; }
+    section.block { break-inside: avoid-page; padding-top: 26px; }
+    section.block h2 { break-after: avoid; }
+    .step, .feature, .shot, .compare .col, .ipbox, .support-card, table.routine { break-inside: avoid; }
+    .shot img { max-width: 100%; }
+    /* El video no se puede imprimir: mostramos el link como texto */
+        .hero::after {
+      content: "Video tutorial: https://www.youtube.com/watch?v=MFWytp2xPr8";
+      display: block; font-size: 12px; color: var(--ink-soft); margin: -14px 0 30px;
+    }
+    /* Todas las respuestas del FAQ se muestran expandidas al imprimir */
+    .faq-a { max-height: none !important; overflow: visible !important; }
+    .faq-q .plus { display: none; }
+    .support-card a.btn { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+
+<div class="topbar">
+  <button id="menuBtn" aria-label="Abrir menú">☰</button>
+  <span>Sistema de Alto Rendimiento</span>
+  <span style="width:34px"></span>
+</div>
+
+<div class="shell">
+  <nav class="sidebar" id="sidebar">
+    <div class="logo-mark"><img src="assets/saturia-logo-horizontal-blanco.png" alt="Saturia Systems"></div>
+    <p class="brand-caption">Guía de usuario<br>Ecosistema de Gestión de Mantenimiento</p>
+    <ul class="navlist">
+      <li><a href="#inicio" class="nav-link">Bienvenida</a></li>
+      <li><a href="#configuracion" class="nav-link">Configuración inicial</a></li>
+      <li><a href="#menu" class="nav-link">Menú superior</a></li>
+      <li><a href="#panel" class="nav-link">Tu panel de avance</a></li>
+      <li><a href="#practicas" class="nav-link">Buenas prácticas</a></li>
+      <li><a href="#mantenimiento" class="nav-link">Mantenimiento y limpieza</a></li>
+      <li><a href="#faq" class="nav-link">Preguntas frecuentes</a></li>
+      <li><a href="#licencia" class="nav-link">Licencia y propiedad</a></li>
+    </ul>
+    <div class="sidebar-foot">
+      <a class="dl" href="#" onclick="window.print(); return false;">↓ Descargar en PDF</a>
+      <div class="sidebar-support">¿Dudas? Escribe a <a href="mailto:soporte@saturiasystems.com">soporte@saturiasystems.com</a></div>
+    </div>
+  </nav>
+
+  <main>
+
+    <section class="hero" id="inicio">
+      <p class="kicker">Guía de usuario</p>
+      <h1>Nunca más pierdas de vista cuándo toca el mantenimiento de cada equipo.</h1>
+      <p class="lede">Esta guía te acompaña paso a paso: desde validar tu configuración, hasta generar tu primera orden de trabajo. No necesitas saber programar — solo seguir el orden.</p>
+
+      <div class="video-frame">
+        <iframe src="https://www.youtube.com/embed/MFWytp2xPr8" title="Video tutorial del sistema" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </section>
+
+    <section class="block" id="configuracion">
+      <h2>⏳ Configuración inicial</h2>
+      <p class="desc">Tres pasos, en orden, para dejar tu sistema activo y funcionando.</p>
+
+      <div class="step">
+        <div class="num">1</div>
+        <div>
+          <h4>Crea tu copia en Google Drive</h4>
+          <p>Abre el enlace que recibiste y presiona el botón azul <strong>"UTILIZAR PLANTILLA"</strong>. Guarda el archivo en una carpeta de tu Drive. Si estás fuera de México, ve a <em>Archivo → Configuración</em> y ajusta región y zona horaria a tu ubicación, para que las fechas funcionen correctamente.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="num">2</div>
+        <div>
+          <h4>Activa tu licencia</h4>
+          <p>En la barra superior verás el menú <strong>"🔑 ACTIVACIÓN"</strong>. Haz clic en "✅ Activar Licencia". Una vez activada, el menú cambia automáticamente a <strong>"🚀 Sistema mantenimiento"</strong>.</p>
+          <div class="callout">Ten iniciada una sola sesión de Google durante esta primera activación — la cuenta con la que hiciste la compra — para evitar conflictos de permisos.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="num">3</div>
+        <div>
+          <h4>Concede los permisos de Google</h4>
+          <p>La primera vez que uses una función, Google pedirá permisos de seguridad — es normal y toma un minuto: acepta la ventana emergente, elige tu cuenta, haz clic en "Configuración avanzada" cuando aparezca el aviso de app no verificada, entra a "Ir a [tu sistema] (no seguro)" y confirma con "Permitir".</p>
+        </div>
+      </div>
+
+      <div class="callout"><strong>Sobre licencias y copias:</strong> tu licencia activa una sola copia, vinculada al ID de ese archivo. Si duplicas el archivo, las funciones automáticas se desactivan por seguridad. Para mover tu licencia a un archivo nuevo, contacta a soporte.</div>
+    </section>
+
+    <section class="block" id="menu">
+      <h2>🚀 Menú superior</h2>
+      <p class="desc">Ubicado junto a "Ayuda", este menú concentra las funciones del sistema.</p>
+
+      <div class="feature-grid">
+        <div class="feature"><div class="icon">⚙️</div><h4>Validar configuración</h4><p>Revisa que los parámetros de la hoja ⚙️ Config sean correctos antes de activar el sistema.</p></div>
+        <div class="feature"><div class="icon">✅</div><h4>Actualizar programación</h4><p>Registra la frecuencia de tus reportes — solo se presiona cuando cambias de horario o frecuencia.</p></div>
+        <div class="feature"><div class="icon">📧</div><h4>Enviar correo ahora</h4><p>Ejecuta un reporte manual instantáneo con el estatus de tus equipos.</p></div>
+        <div class="feature"><div class="icon">📄</div><h4>Generar orden de trabajo</h4><p>Envía los equipos que seleccionaste en la columna L directamente a la hoja Plantilla, lista para imprimir o guardar como PDF tamaño carta y entregar a quien dará el mantenimiento.</p></div>
+        <div class="feature"><div class="icon">📅</div><h4>Sincronizar con Calendar</h4><p>Exporta tus mantenimientos a Google Calendar: los próximos se agendan en su fecha, y los vencidos se agendan hoy mismo con la etiqueta "🚨 URGENTE" para que ningún equipo crítico quede en el olvido. Requiere tener "Sí" en la celda B7 de ⚙️ Config.</p></div>
+        <div class="feature"><div class="icon">📊</div><h4>Abrir panel</h4><p>Ve de un vistazo cuántas tareas están vencidas, por programar o en tiempo, y búscalas o filtra por estado, frecuencia o ubicación. Marca una tarea como Realizada o agrégala a la orden de trabajo con un clic. En la pestaña Plantilla revisa las tareas agregadas, escribe observaciones y marca su cumplimiento. La primera vez que lo abras, Google te pedirá permisos de seguridad.</p></div>
+      </div>
+      <div class="callout">🔄 <strong>Re-verificar licencia</strong> — usa esta opción solo si renovaste tu suscripción recientemente o el sistema muestra un mensaje de restricción tras un cambio de cuenta.</div>
+    </section>
+
+    <section class="block" id="panel">
+      <h2>📊 Así se ve tu panel de avance</h2>
+      <p class="desc">Capturas reales del panel flotante — así se organiza la información de tus equipos y tareas.</p>
+
+      <div class="shot">
+        <div class="shot-bar"><span></span><span></span><span></span></div>
+        <img src="assets/screenshot-1.png" alt="Panel en vivo con tareas vencidas, por programar y en tiempo">
+        <div class="shot-caption"><strong>Panel en vivo —</strong> total de tareas, vencidas, por programar y en tiempo, tu efectividad general, y la lista de atención inmediata para lo más urgente.</div>
+      </div>
+
+      <div class="shot">
+        <div class="shot-bar"><span></span><span></span><span></span></div>
+        <img src="assets/screenshot-2.png" alt="Lista de tareas con filtros por frecuencia y ubicación">
+        <div class="shot-caption"><strong>Buscar y filtrar tareas —</strong> filtra por estado, frecuencia o ubicación, y marca cada tarea como Realizada o agrégala a la próxima orden de trabajo con un clic.</div>
+      </div>
+
+      <div class="shot">
+        <div class="shot-bar"><span></span><span></span><span></span></div>
+        <img src="assets/screenshot-3.png" alt="Plantilla de orden de trabajo lista para imprimir">
+        <div class="shot-caption"><strong>Orden de trabajo —</strong> las tareas que agregaste desde el panel, listas para imprimir o guardar como PDF y entregar a quien hará el mantenimiento.</div>
+      </div>
+    </section>
+
+    <section class="block" id="practicas">
+      <h2>🛡️ Buenas prácticas</h2>
+      <p class="desc">El sistema está diseñado para no romperse — mientras respetes estas reglas.</p>
+
+      <div class="compare">
+        <div class="col yes">
+          <h4>✅ SÍ PUEDES HACER</h4>
+          <ul>
+            <li>Cambiar colores y fuentes de los encabezados</li>
+            <li>Editar datos en la hoja ⚙️ Config cuando quieras</li>
+            <li>Editar libremente cualquier celda marcada con el icono de la mano ✍️</li>
+          </ul>
+        </div>
+        <div class="col no">
+          <h4>⚠️ NO DEBES HACER</h4>
+          <ul>
+            <li>Cambiar el nombre del archivo o de las pestañas</li>
+            <li>Modificar o borrar el texto de los encabezados — rompería las fórmulas</li>
+            <li>Insertar o eliminar filas y columnas manualmente</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout">El valor de este sistema no está en revisarlo de vez en cuando, sino en mantener actualizada la hoja Mantenimiento: una frecuencia bien configurada es lo que evita que un equipo crítico llegue vencido sin que te des cuenta.</div>
+    </section>
+
+    <section class="block" id="mantenimiento">
+      <h2>🧹 Mantenimiento y limpieza</h2>
+      <p class="desc">Para dar de baja o alta un equipo, o ajustar categorías y frecuencias, sigue estos pasos.</p>
+
+      <div class="step"><div class="num">1</div><div><h4>Elimina un equipo existente</h4><p>Ve a la hoja "Mantenimiento", busca la fila del equipo, selecciona el rango de las columnas B a la D y presiona Suprimir o Borrar.</p></div></div>
+      <div class="step"><div class="num">2</div><div><h4>Agrega un equipo nuevo</h4><p>En la misma hoja "Mantenimiento", ubícate en la fila vacía disponible y escribe los datos del nuevo equipo.</p></div></div>
+      <div class="step"><div class="num">3</div><div><h4>Modifica categorías o frecuencias</h4><p>Hazlo exclusivamente desde la hoja "⚙️ Config" para que el sistema actualice las opciones disponibles.</p></div></div>
+    </section>
+
+    <section class="block" id="faq">
+      <h2>❓ Preguntas frecuentes</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-q">¿Por qué no se actualizó el calendario? <span class="plus">+</span></div>
+          <div class="faq-a"><p>Asegúrate de que la celda B7 en ⚙️ Config diga exactamente "Sí".</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">¿Qué significa el "Uso y Desgaste" en estado Crítico? <span class="plus">+</span></div>
+          <div class="faq-a"><p>Significa que el equipo ya superó el 100% de los días de su frecuencia asignada.</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">¿Exactamente qué día y a qué hora recibiré mi reporte? <span class="plus">+</span></div>
+          <div class="faq-a"><p>Llega a la hora marcada en tu hoja ⚙️ Config. El día depende de la frecuencia: semanal, todos los lunes; quincenal, cada 2 semanas en lunes; mensual, trimestral o semestral, el día 1 de cada periodo; anual, cada 365 días desde la activación.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="licencia">
+      <h2>⚖️ Licencia y propiedad intelectual</h2>
+      <div class="ipbox">
+        <p>Este sistema y su código fuente son propiedad intelectual exclusiva de <strong>Saturia Systems</strong>. Al adquirirlo, aceptas lo siguiente:</p>
+        <p><strong>Uso permitido</strong> — licencia de uso personal o corporativo, vinculada al correo del comprador.</p>
+        <p><strong>Vínculo digital</strong> — el software está protegido por una licencia ligada al ID del archivo. Reproducir, copiar, revender o modificar el código sin autorización por escrito revoca la licencia de forma automática y permanente.</p>
+        <p><strong>Integridad del código</strong> — el sistema cuenta con validación remota. Alterar los scripts de seguridad puede provocar mal funcionamiento y pérdida permanente de datos.</p>
+        <p><strong>Responsabilidad</strong> — el autor no se hace responsable por pérdida de información derivada de un uso incorrecto, eliminación accidental de fórmulas críticas, manipulación del editor de scripts, o cambios en las políticas de Google Apps Script.</p>
+      </div>
+
+      <div class="support-card">
+        <div>
+          <h3>¿Se te complicó algún paso?</h3>
+          <p>Nuestro equipo responde consultas de soporte en menos de 24 horas hábiles.</p>
+        </div>
+        <a class="btn" href="mailto:soporte@saturiasystems.com">Escribir a soporte</a>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer class="foot">Saturia Systems — Ecosistema de Gestión de Mantenimiento</footer>
+
+<script>
+  const sidebar = document.getElementById('sidebar');
+  const menuBtn = document.getElementById('menuBtn');
+  menuBtn?.addEventListener('click', () => sidebar.classList.toggle('open'));
+  document.querySelectorAll('.nav-link').forEach(a => a.addEventListener('click', () => sidebar.classList.remove('open')));
+
+  const sections = document.querySelectorAll('section.block, section.hero');
+  const links = document.querySelectorAll('.nav-link');
+  const progressBar = document.getElementById('progressBar');
+
+  const onScroll = () => {
+    let current = sections[0]?.id;
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+    links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + current));
+
+    const doc = document.documentElement;
+    const scrolled = (window.scrollY) / (doc.scrollHeight - window.innerHeight) * 100;
+    progressBar.style.width = Math.min(100, Math.max(0, scrolled)) + '%';
+  };
+  window.addEventListener('scroll', onScroll);
+  onScroll();
+
+  document.querySelectorAll('.faq-item').forEach(item => {
+    item.querySelector('.faq-q').addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+</script>
+
+</body>
+</html>
